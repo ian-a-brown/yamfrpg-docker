@@ -1,0 +1,30 @@
+FROM ruby
+RUN apt-get update -qq && \
+  apt-get install -y curl git build-essential libpq-dev nodejs postgresql-client zip \
+  --fix-missing \
+  --no-install-recommends && \
+  gem update bundler
+
+# Set up the shell RC file
+COPY export-root-env.sh .env /root/
+RUN chmod +x /root/export-root-env.sh && echo "source /root/export-root-env.sh" >> /root/.bashrc
+
+# Install some additional files.
+WORKDIR /yamfrpg
+COPY wait-for-it.sh setup-for-rails.sh ./
+
+# Disable IPV6.
+RUN cp /etc/hosts /tmp/hosts.original && \
+  sed -e 's/localhost\sip6\-localhost/ip6-localhost/' /tmp/hosts.original >/tmp/hosts
+
+# Setup the engine.
+WORKDIR /yamfrpg-engine
+RUN mkdir -p /yamfrpg-engine/lib/yamfrpg/engine
+COPY ./yamfrpg-engine/lib/yamfrpg/engine/version.rb /yamfrpg-engine/lib/yamfrpg/engine
+COPY ./yamfrpg-engine/Gemfile ./yamfrpg-engine/yamfrpg-engine.gemspec ./yamfrpg-engine/Gemfile.lock ./
+RUN export $(grep -v '^[[:space:]]*#' /root/env |xargs) && \
+  bundle config --local GITHUB__COM -x-access-token:${YAMFRPG_ENGINE_TOKEN} && \
+  bundle install
+
+# Install the engine.
+ADD ./yamfrpg-engine /yamfrpg-engine

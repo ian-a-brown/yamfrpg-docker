@@ -1,0 +1,5 @@
+.env
+yamfrpg-data
+yamfrpg-disks/*
+yamfrpg-engine
+yamfrpg-testing

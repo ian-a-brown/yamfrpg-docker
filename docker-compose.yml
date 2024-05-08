@@ -1,0 +1,28 @@
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  engine:
+    build:
+      context: .
+      dockerfile: Dockerfile-engine
+    image: yamfrpg/yamfrpg-engine:latest
+    links:
+      - postgres
+    volumes:
+      - ./yamfrpg-engine:/yamfrpg-engine
+    command: bash
+
+volumes:
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./yamfrpg-disks/postgres_data
+      o: bind
