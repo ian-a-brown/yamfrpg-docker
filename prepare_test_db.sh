@@ -8,7 +8,7 @@ if [ $# -eq 0 ]; then
 fi
 
 echo "Set up test DB."
-docker-compose -f ${YAMFRPG_DOCKER_COMPOSE_FILE} \
+docker compose -f ${YAMFRPG_DOCKER_COMPOSE_FILE} \
   run -T --no-deps --rm engine bash --login -c "/yamfrpg/setup-for-rails.sh; bundle exec rails db:test:prepare"
 
 if [ $# -eq 0 ]; then

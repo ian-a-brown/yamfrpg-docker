@@ -8,7 +8,7 @@ if [ $# -eq 0 ]; then
 fi
 
 echo "Dropping existing database"
-docker-compose -f ${YAMFRPG_DOCKER_COMPOSE_FILE} \
+docker compose -f ${YAMFRPG_DOCKER_COMPOSE_FILE} \
   run -T --no-deps --rm engine bash --login -c \
     "/yamfrpg/setup-for-rails.sh; bundle exec rails db:drop"
 
