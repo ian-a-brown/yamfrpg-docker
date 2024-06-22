@@ -1,5 +1,6 @@
 .env
 yamfrpg-data/**/*
 yamfrpg-disks/**/*
+yamfrpg-api
 yamfrpg-engine
 yamfrpg-testing

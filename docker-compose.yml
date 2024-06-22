@@ -19,6 +19,19 @@ services:
       - ./yamfrpg-engine:/yamfrpg-engine
     command: bash
 
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile-api
+    image: yamfrpg/yamfrpg-api:latest
+    links:
+      - postgres
+    volumes:
+      - ./yamfrpg-api:/yamfrpg-api
+    command: bash --login -c "/yamfrpg/setup-for-rails.sh; rm -f tmp/pids/server.pid && bundle exec puma -b tcp://0.0.0.0:3250"
+    ports:
+      - 3250:3250
+
 volumes:
   postgres_data:
     driver: local

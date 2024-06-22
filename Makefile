@@ -3,7 +3,7 @@
 SHELL = /usr/bin/env bash
 DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-build_engine:
+build:
 	${DIR}/export-env.sh; ${DIR}/build.sh
 
 create_db:
@@ -18,6 +18,9 @@ drop_db:
 engine_shell:
 	${DIR}/export-env.sh; ${DIR}/shell.sh engine
 
+api_shell:
+	${DIR}/export-env.sh; ${DIR}/shell.sh api
+\
 load_data:
 	${DIR}/export-env.sh; ${DIR}/load_data.sh
 
